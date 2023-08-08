@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
 export interface User {
+  _id: string;
   username: string;
   email: string;
   password: string;
-  /*   confirmPassword: string; */
   dateOfBirth: Date;
   isVerified: boolean;
   verificationCodeForgotPassword: string;
@@ -24,3 +24,7 @@ export type MiddlewareFunction = (
 export type ValidationErrorHandler = (
   inputs: MiddlewareFunction[]
 ) => MiddlewareFunction[];
+
+export interface HandlerError extends Error {
+  statusCode?: number;
+}

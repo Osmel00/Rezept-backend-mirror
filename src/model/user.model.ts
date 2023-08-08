@@ -16,3 +16,26 @@ export async function createUser(
   });
   return user.save();
 }
+
+//! email verification
+export async function verifyEmailModel(email: string): Promise<boolean> {
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    return false;
+  }
+
+  user.isVerified = true;
+  await user.save();
+
+  return true;
+}
+
+//! login
+export async function loginModel(
+  email: string,
+  password: string
+): Promise<User | null> {
+  const user = await UserModel.findOne({ email });
+  return user || null;
+}
