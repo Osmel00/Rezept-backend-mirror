@@ -8,6 +8,8 @@ import recipeRouter from "./router/recipe";
 import commentRouter from "./router/comment";
 import emailRouter from "./router/user";
 
+import { errorHandler } from "./middelware/errorHandler";
+
 /** */
 dotenv.config();
 const app = express();
@@ -42,6 +44,8 @@ app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);
 app.use("/comment", commentRouter);
 app.use("/email", emailRouter);
+
+app.use(errorHandler);
 
 // Start the server
 app.listen(port, () => {

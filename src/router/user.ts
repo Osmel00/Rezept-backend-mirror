@@ -11,4 +11,12 @@ router.post(
   UserController.register
 );
 
+router.get("/verify/:token", UserController.verifyEmail);
+
+router.post(
+  "/login",
+  validationError(userValidationsRules.signin),
+  UserController.login
+);
+
 export default router;

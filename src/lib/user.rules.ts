@@ -42,4 +42,25 @@ export const userValidationsRules = {
       .custom((value, { req }) => value === req.body.password)
       .withMessage("Passwords do not match"),
   ],
+
+  signin: [
+    check("email")
+      .escape()
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Invalid email format")
+      .normalizeEmail(),
+
+    check("password")
+      .escape()
+      .notEmpty()
+      .withMessage("Password is required")
+      .isLength({ min: 8 })
+      .withMessage("Password must be at least 8 characters long")
+      .matches(/\d/)
+      .withMessage("Password must contain at least one digit")
+      .matches(/[a-zA-Z]/)
+      .withMessage("Password must contain at least one letter"),
+  ],
 };
