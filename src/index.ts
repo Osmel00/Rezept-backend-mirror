@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
+import dotenv from "dotenv";
 
 /** routers */
 import userRouter from "./router/user";
@@ -8,8 +9,9 @@ import commentRouter from "./router/comment";
 import emailRouter from "./router/user";
 
 /** */
+dotenv.config();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const connectDb = async (): Promise<void> => {
   try {
@@ -34,6 +36,7 @@ connectDb();
 app.get("/", (req: Request, res: Response) => {
   res.send("recipe sharing");
 });
+app.use(express.urlencoded({ extended: false }));
 
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);
