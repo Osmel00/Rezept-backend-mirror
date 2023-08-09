@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { createUser, loginModel, verifyEmailModel } from "../model/user.model";
+import UserModel from "../model/user.schema";
 
 export const UserController = {
   //!Register
@@ -41,20 +42,20 @@ export const UserController = {
       });
 
       const text = `
-      <p>Dear ${newUser.username},</p>
-      <p>Thank you for registering with Rezepte-Sharing-Plattform! We're thrilled to have you on board.</p>
-      <p>Your account is almost ready. Before you start exploring, please verify your email address by clicking on the link below:</p>
-      <p><a href="http://localhost:3000/user/verify/${token}">Verify Email</a></p>
-      <p>Verifying your email ensures the security of your account and unlocks all the features and content waiting for you.</p>
-      <p>If you have any questions or need assistance, feel free to reach out to our support team at ${process.env.EMAIL}. We're here to help you have a seamless experience with us.</p>
-      <p>Once again, welcome to Rezepte-Sharing-Plattform! We can't wait to see you make the most of your time here.</p>
-      <p>Best regards,<br />The Rezepte-Sharing-Plattform Team</p>
+      <p>Liebe*r ${newUser.username},</p>
+      <p>Vielen Dank für die Registrierung bei Tasty Pixel! Wir freuen uns, dich an Bord zu haben.</p>
+      <p>Dein Konto ist fast fertig. Bevor du loslegst, verifiziere bitte deine E-Mail-Adresse, indem du auf den folgenden Link klickst:</p>
+      <p><a href="http://localhost:3000/user/verify/${token}">E-Mail verifizieren</a></p>
+      <p>Die Verifizierung deiner E-Mail sichert dein Konto und schaltet alle Funktionen und Inhalte frei, die auf dich warten.</p>
+      <p>Bei Fragen oder Unterstützungsbedarf kannst du dich gerne an unser Support-Team unter ${process.env.EMAIL} wenden. Wir sind hier, um dir eine reibungslose Erfahrung zu bieten.</p>
+      <p>Nochmals herzlich willkommen bei der Tasty Pixel! Wir sind gespannt darauf, wie du deine Zeit bei uns nutzen wirst.</p>
+      <p>Herzliche Grüße,<br />Das Team der Tasty Pixel</p>
   `;
 
       const mailOptions = {
         from: process.env.EMAIL,
         to: newUser.email,
-        subject: "Account Verification",
+        subject: "Konto Verifizierung",
         html: text,
       };
 
@@ -62,7 +63,7 @@ export const UserController = {
 
       res.status(201).json({
         message:
-          "Registration successful. Check your email for verification instructions.",
+          "Registrierung erfolgreich. Überprüfe deine E-Mail für die Verifizierungsanweisungen.",
         newUser,
         token,
       });
@@ -84,14 +85,15 @@ export const UserController = {
       const userVerified = await verifyEmailModel(decodedToken.email);
 
       if (!userVerified) {
-        return res
-          .status(404)
-          .json({ message: "Please verify your email before logging in." });
+        return res.status(404).json({
+          message:
+            "Bitte verifiziere deine E-Mail-Adresse, bevor du dich einloggst.",
+        });
       }
 
       const successMessage = `<html>
       <head>
-        <title>Email Verification Success</title>
+        <title>E-Mail Verifizierung erfolgreich</title>
         <style>
           body {
             display: flex;
@@ -127,7 +129,7 @@ export const UserController = {
         <div class="card">
           <div class="success-icon">✓</div>
           <div class="message">
-            <p>Your email has been successfully verified!</p>
+            <p>Deine E-Mail wurde erfolgreich verifiziert!</p>
           </div>
         </div>
       </body>
@@ -149,18 +151,23 @@ export const UserController = {
 
       // user not found
       if (!user) {
-        return res.status(401).json({ error: "Invalid email or password." });
+        return res
+          .status(401)
+          .json({ error: "Ungültige E-Mail oder Passwort." });
       }
 
       //compare password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(401).json({ error: "Password does not match!" });
+        return res
+          .status(401)
+          .json({ error: "Passwort stimmt nicht überein!" });
       }
       // user verified
       if (!user.isVerified) {
         return res.status(401).json({
-          error: "Please verify your email before logging in.",
+          error:
+            "Bitte verifiziere deine E-Mail-Adresse, bevor du dich einloggst.",
         });
       }
 
@@ -173,9 +180,91 @@ export const UserController = {
         }
       );
 
-      res.status(200).json({ message: "Login successful.", user, token });
+      res.status(200).json({ message: "Anmeldung erfolgreich.", user, token });
     } catch (error) {
       next(error);
     }
   },
+
+  //! forgot password
+  async forgotPassword(req: Request, res: Response) {
+    const { email } = req.body;
+    try {
+      const user = await UserModel.findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({ error: "Benutzer nicht gefunden." });
+      }
+
+      const verificationCode = Math.floor(100000 + Math.random() * 900000); //  6-digit verification code
+      user.verificationCodeForgotPassword = verificationCode.toString();
+      await user.save();
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASS,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: user.email,
+        subject: "Bestätigungscode",
+        text: `Dein Bestätigungscode lautet: ${verificationCode}`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      res
+        .status(200)
+        .json({ message: "Bestätigungscode erfolgreich gesendet.", user });
+    } catch (error) {
+      console.error("Fehler bei der Generierung des Bestätigungscodes:", error);
+      res.status(500).json({
+        error:
+          "Beim Generieren des Bestätigungscodes ist ein Fehler aufgetreten.",
+      });
+    }
+  },
+
+  //! Verification Code
+  async verifyVerificationCode(req: Request, res: Response) {
+    try {
+      const { verificationCodeForgotPassword } = req.body;
+      const { email } = req.params;
+
+      const user = await UserModel.findOne({
+        email,
+        verificationCodeForgotPassword,
+      });
+
+      if (!user) {
+        return res.status(400).json({ error: "Ungültiger Bestätigungscode." });
+      }
+
+      const token = jwt.sign(
+        { username: user.username },
+        process.env.ACCESS_TOKEN_SECRET as string,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      res.status(200).json({
+        message: "Bestätigungscode erfolgreich gesendet.",
+        user,
+        token,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message:
+          "Ein Fehler ist bei der Validierung des Bestätigungscodes aufgetreten.",
+      });
+    }
+  },
+
+  //! ResetPassword
+  // here
 };
