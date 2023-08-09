@@ -26,6 +26,16 @@ Response: {
 }
 ```
 
+## Email verification
+
+```js
+EndPoint: `/user/verify/:token`;
+Method: GET;
+body: -,
+Response: {
+}
+```
+
 ## Login
 
 ```js
