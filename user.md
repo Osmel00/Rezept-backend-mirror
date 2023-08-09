@@ -13,7 +13,6 @@ Response: {
   wishlist["empty"];
   token,
   }
-
 }
 ```
 
