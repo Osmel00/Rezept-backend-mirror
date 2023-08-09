@@ -4,6 +4,8 @@ import { createNewRecipe, getRecipe, callRecipes } from "../model/recipe.model";
 export const getSingleRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
 
+  console.log(id);
+
   getRecipe(id)
     .then((resolve) => res.status(200).send(resolve))
     .catch((err) => {
