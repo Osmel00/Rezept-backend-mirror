@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
 
 /** routers */
 import userRouter from "./router/user";
@@ -39,6 +40,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("recipe sharing");
 });
 app.use(express.urlencoded({ extended: false }));
+
+app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);
