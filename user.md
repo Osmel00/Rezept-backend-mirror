@@ -1,7 +1,7 @@
-##Register
+## Register
 
 ```js
-EndPoint: `/user/register`;
+EndPoint: `/user/registrieren`;
 Method: POST;
 body:{
   username:string,
@@ -30,7 +30,7 @@ Response: {
 ## Email verification
 
 ```js
-EndPoint: `/user/verify/:token`;
+EndPoint: `/user/verifizieren/:token`;
 Method: GET;
 body: -,
 Response: {
@@ -50,7 +50,7 @@ Response: {
 ## Login
 
 ```js
-EndPoint: `/user/login`;
+EndPoint: `/user/anmelden`;
 Method: POST;
 body:{
   email:string,
@@ -74,7 +74,7 @@ Response: {
 ## Write your Email to Change Password
 
 ```js
-EndPoint: `/user/forgot-password`;
+EndPoint: `/user/passwort-vergessen`;
 Method: POST;
 body:{
 email:string,
@@ -98,10 +98,35 @@ Response: {
 ## Write your Verification Code to change Passowrd
 
 ```js
-EndPoint: `/user/verify-verification-code/:email`;
+EndPoint: `/user/verifiziere-verifikationscode/:email`;
 Method: POST;
 body:{
 verificationCodeForgotPassword:string,
+}
+Response: {
+  user:{
+    username:string,
+    email:string,
+    password:string,
+    dateOfBirth:Date,
+    isVerified:boolean,
+    info["empty"]?:string[],
+    image["empty"]?:string[],
+    wishlist["empty"]?:string[];
+    verificationCodeForgotPassword:string,
+  }
+    token:string
+}
+```
+
+## Reset Password
+
+```js
+EndPoint: `/user/passwort-zuruecksetzen/:email"`;
+Method: PUT;
+body:{
+  password:string,
+  confirmPassword:string,
 }
 Response: {
   user:{

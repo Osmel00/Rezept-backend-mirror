@@ -7,25 +7,32 @@ import { validationError } from "../middelware/validation";
 
 //!register
 router.post(
-  "/register",
+  "/registrieren",
   validationError(userValidationsRules.signup),
   UserController.register
 );
 //! email validation
-router.get("/verify/:token", UserController.verifyEmail);
+router.get("/verifizieren/:token", UserController.verifyEmail);
 
 //!login
 router.post(
-  "/login",
+  "/anmelden",
   validationError(userValidationsRules.signin),
   UserController.login
 );
 //!forgot password
-router.post("/forgot-password", UserController.forgotPassword);
+router.post("/passwort-vergessen", UserController.forgotPassword);
 
 //! verification code
 router.post(
-  "/verify-verification-code/:email",
+  "/verifiziere-verifikationscode/:email",
   UserController.verifyVerificationCode
+);
+
+//! reset password
+router.put(
+  "/passwort-zuruecksetzen/:email",
+  validationError(userValidationsRules.resetPassword),
+  UserController.resetPassword
 );
 export default router;
