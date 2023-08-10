@@ -11,7 +11,6 @@ export const UserController = {
     try {
       const { username, email, dateOfBirth, password, confirmPassword } =
         req.body;
-
       // Hash Password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,6 +22,7 @@ export const UserController = {
         hashedPassword,
         dateOfBirth
       );
+
       // Create verification token
       const token = jwt.sign(
         { email: newUser.email },
