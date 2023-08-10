@@ -5,14 +5,13 @@ export interface User {
   username: string;
   email: string;
   password: string;
-  dateOfBirth: Date;
+  dateOfBirth?: Date;
   isVerified: boolean;
   verificationCodeForgotPassword: string;
-  registrationDate: Date;
-  info: string[];
-  image: string[];
-  like: number;
-  wishlist: string[];
+  info?: string[];
+  image?: string[];
+  like?: number;
+  wishlist?: string[];
 }
 
 export type MiddlewareFunction = (

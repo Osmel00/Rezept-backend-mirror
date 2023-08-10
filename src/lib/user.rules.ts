@@ -5,62 +5,61 @@ export const userValidationsRules = {
     check("username")
       .escape()
       .notEmpty()
-      .withMessage("Username is required")
+      .withMessage("Benutzername wird benötigt")
       .isLength({ min: 3 })
-      .withMessage("Username must be at least 3 characters long"),
-    /*  .trim(), */
+      .withMessage("Benutzername muss mindestens 3 Zeichen lang sein"),
 
     check("email")
       .escape()
       .notEmpty()
-      .withMessage("Email is required")
+      .withMessage("E-Mail wird benötigt")
       .isEmail()
-      .withMessage("Invalid email format")
+      .withMessage("Ungültiges E-Mail-Format")
       .normalizeEmail(),
 
     check("dateOfBirth")
       .optional()
       .isISO8601()
       .toDate()
-      .withMessage("Invalid date format for date of birth"),
+      .withMessage("Ungültiges Datumsformat für Geburtsdatum"),
 
     check("password")
       .escape()
       .notEmpty()
-      .withMessage("Password is required")
+      .withMessage("Passwort wird benötigt")
       .isLength({ min: 8 })
-      .withMessage("Password must be at least 8 characters long")
+      .withMessage("Passwort muss mindestens 8 Zeichen lang sein")
       .matches(/\d/)
-      .withMessage("Password must contain at least one digit")
+      .withMessage("Passwort muss mindestens eine Ziffer enthalten")
       .matches(/[a-zA-Z]/)
-      .withMessage("Password must contain at least one letter"),
+      .withMessage("Passwort muss mindestens einen Buchstaben enthalten"),
 
     check("confirmPassword")
       .escape()
       .notEmpty()
-      .withMessage("Confirm Password is required")
+      .withMessage("Bestätigung des Passworts wird benötigt")
       .custom((value, { req }) => value === req.body.password)
-      .withMessage("Passwords do not match"),
+      .withMessage("Passwörter stimmen nicht überein"),
   ],
 
   signin: [
     check("email")
       .escape()
       .notEmpty()
-      .withMessage("Email is required")
+      .withMessage("E-Mail wird benötigt")
       .isEmail()
-      .withMessage("Invalid email format")
+      .withMessage("Ungültiges E-Mail-Format")
       .normalizeEmail(),
 
     check("password")
       .escape()
       .notEmpty()
-      .withMessage("Password is required")
+      .withMessage("Passwort wird benötigt")
       .isLength({ min: 8 })
-      .withMessage("Password must be at least 8 characters long")
+      .withMessage("Passwort muss mindestens 8 Zeichen lang sein")
       .matches(/\d/)
-      .withMessage("Password must contain at least one digit")
+      .withMessage("Passwort muss mindestens eine Ziffer enthalten")
       .matches(/[a-zA-Z]/)
-      .withMessage("Password must contain at least one letter"),
+      .withMessage("Passwort muss mindestens einen Buchstaben enthalten"),
   ],
 };
