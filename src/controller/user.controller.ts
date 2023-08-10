@@ -54,6 +54,7 @@ export const UserController = {
 
       const mailOptions = {
         from: process.env.EMAIL,
+
         to: newUser.email,
         subject: "Konto Verifizierung",
         html: text,
@@ -266,5 +267,34 @@ export const UserController = {
   },
 
   //! ResetPassword
-  // here
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const { password, confirmPassword } = req.body;
+      const { email } = req.params;
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const user = await UserModel.findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({
+          message: "Benutzer nicht gefunden oder ungültiger Bestätigungscode.",
+        });
+      }
+
+      user.password = hashedPassword;
+      user.verificationCodeForgotPassword = "";
+      await user.save();
+
+      res
+        .status(200)
+        .json({ message: "Passwortrücksetzung erfolgreich.", user });
+    } catch (error) {
+      res.status(500).json({
+        message:
+          "Ein Fehler ist aufgetreten, während das Passwort zurückgesetzt wurde.",
+      });
+    }
+  },
 };
