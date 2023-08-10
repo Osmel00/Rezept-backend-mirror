@@ -62,4 +62,23 @@ export const userValidationsRules = {
       .matches(/[a-zA-Z]/)
       .withMessage("Passwort muss mindestens einen Buchstaben enthalten"),
   ],
+  resetPassword: [
+    check("password")
+      .escape()
+      .notEmpty()
+      .withMessage("Passwort wird benötigt")
+      .isLength({ min: 8 })
+      .withMessage("Passwort muss mindestens 8 Zeichen lang sein")
+      .matches(/\d/)
+      .withMessage("Passwort muss mindestens eine Ziffer enthalten")
+      .matches(/[a-zA-Z]/)
+      .withMessage("Passwort muss mindestens einen Buchstaben enthalten"),
+
+    check("confirmPassword")
+      .escape()
+      .notEmpty()
+      .withMessage("Bestätigung des Passworts wird benötigt")
+      .custom((value, { req }) => value === req.body.password)
+      .withMessage("Passwörter stimmen nicht überein"),
+  ],
 };
