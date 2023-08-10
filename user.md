@@ -12,6 +12,7 @@ body:{
 }
 Response: {
   newUser:{
+
     username:string,
     email:string,
     password:string,
@@ -33,6 +34,16 @@ EndPoint: `/user/verify/:token`;
 Method: GET;
 body: -,
 Response: {
+  username,
+  email,
+  password,
+  dateOfBirth,
+  isVerified:false,
+  info["empty"],
+  image["empty"],
+  wishlist["empty"];
+  token,
+  }
 }
 ```
 
