@@ -47,6 +47,8 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
+app.use(cors());
+
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);
 app.use("/comment", commentRouter);

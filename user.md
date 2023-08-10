@@ -44,7 +44,6 @@ Response: {
   wishlist["empty"];
   token,
   }
-}
 ```
 
 ## Login
