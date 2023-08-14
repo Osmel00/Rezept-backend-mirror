@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
 
 /** routers */
 import userRouter from "./router/user";
@@ -18,8 +19,8 @@ const port = process.env.PORT || 3000;
 const connectDb = async (): Promise<void> => {
   try {
     await mongoose.connect(
-      //"mongodb://127.0.0.1:27017/recipe-sharing",
-      "mongodb+srv://aliho3einde:qPRehosjqi7aUr63@cluster0.oiaok8u.mongodb.net/?retryWrites=true&w=majority",
+      "mongodb://127.0.0.1:27017/recipe-sharing",
+      //"mongodb+srv://aliho3einde:qPRehosjqi7aUr63@cluster0.oiaok8u.mongodb.net/?retryWrites=true&w=majority",
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -39,6 +40,14 @@ app.get("/", (req: Request, res: Response) => {
   res.send("recipe sharing");
 });
 app.use(express.urlencoded({ extended: false }));
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+app.use(express.json());
+app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);

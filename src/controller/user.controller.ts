@@ -11,7 +11,6 @@ export const UserController = {
     try {
       const { username, email, dateOfBirth, password, confirmPassword } =
         req.body;
-
       // Hash Password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,6 +22,7 @@ export const UserController = {
         hashedPassword,
         dateOfBirth
       );
+
       // Create verification token
       const token = jwt.sign(
         { email: newUser.email },
@@ -45,7 +45,7 @@ export const UserController = {
       <p>Liebe*r ${newUser.username},</p>
       <p>Vielen Dank für die Registrierung bei Tasty Pixel! Wir freuen uns, dich an Bord zu haben.</p>
       <p>Dein Konto ist fast fertig. Bevor du loslegst, verifiziere bitte deine E-Mail-Adresse, indem du auf den folgenden Link klickst:</p>
-      <p><a href="http://localhost:3000/user/verify/${token}">E-Mail verifizieren</a></p>
+      <p><a href="http://localhost:3000/user/verifizieren/${token}">E-Mail verifizieren</a></p>
       <p>Die Verifizierung deiner E-Mail sichert dein Konto und schaltet alle Funktionen und Inhalte frei, die auf dich warten.</p>
       <p>Bei Fragen oder Unterstützungsbedarf kannst du dich gerne an unser Support-Team unter ${process.env.EMAIL} wenden. Wir sind hier, um dir eine reibungslose Erfahrung zu bieten.</p>
       <p>Nochmals herzlich willkommen bei der Tasty Pixel! Wir sind gespannt darauf, wie du deine Zeit bei uns nutzen wirst.</p>
