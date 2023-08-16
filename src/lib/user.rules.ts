@@ -14,8 +14,8 @@ export const userValidationsRules = {
       .notEmpty()
       .withMessage("E-Mail wird benötigt")
       .isEmail()
-      .withMessage("Ungültiges E-Mail-Format")
-      .normalizeEmail(),
+      .withMessage("Ungültiges E-Mail-Format"),
+    /*   .normalizeEmail(), */
 
     check("dateOfBirth")
       .optional()
@@ -48,8 +48,8 @@ export const userValidationsRules = {
       .notEmpty()
       .withMessage("E-Mail wird benötigt")
       .isEmail()
-      .withMessage("Ungültiges E-Mail-Format")
-      .normalizeEmail(),
+      .withMessage("Ungültiges E-Mail-Format"),
+    /* .normalizeEmail(), */
 
     check("password")
       .escape()

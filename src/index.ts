@@ -39,15 +39,15 @@ connectDb();
 app.get("/", (req: Request, res: Response) => {
   res.send("recipe sharing");
 });
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true,
 };
-app.use(express.json());
-app.use(cors(corsOptions));
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);
