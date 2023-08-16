@@ -3,7 +3,7 @@ export interface Comment {
     userID: string;
     recipeID: string;
     titles: string;
-    desc: string;
-    date:Date;
+    desc?: string;
+    date?:Date;
     like?:number[];
 }

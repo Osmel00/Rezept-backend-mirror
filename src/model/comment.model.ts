@@ -3,8 +3,9 @@ import CommentModel from "../model/comment.schema";
 
 export const allComments = async (recipeId: string) => {
   try {
-    const data = await CommentModel.find({recipeID:recipeId});
-    return data;
+    const data = await CommentModel.find({recipeID:recipeId}).populate('userID','image');
+    console.log(data);
+    return data; // returns all comments for a specific recipe with the user's image
   } catch {
     throw new Error();
   }

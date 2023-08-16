@@ -6,7 +6,7 @@ export const getAllComments = async (req: Request, res: Response)  => {
    
     const { id } = req.params;
     allComments(id).then(comments => res.status(200).send(comments)).catch((err) => {
-        res.send(500).send("error while get this comments from db");
+        res.status(500).send("error while get this comments from db");
       });
    
   };
