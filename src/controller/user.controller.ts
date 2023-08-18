@@ -203,8 +203,6 @@ export const UserController = {
       user.verificationCodeForgotPassword = verificationCode.toString();
       await user.save();
 
-      console.log("veri", verificationCode);
-
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -301,7 +299,7 @@ export const UserController = {
       });
     }
   },
-
+  //!createContact
   async createContact(req: Request, res: Response) {
     try {
       const { username, email, subject, textMessage } = req.body;
@@ -334,9 +332,15 @@ export const UserController = {
         subject: "Kontaktformular - Nachrichteneingang",
         text: `Hallo ${username},\n\nVielen Dank für Ihre Nachricht. Wir haben Ihre Anfrage erhalten:\n\nIhre Nachricht lautet:\n${textMessage}\n\nWir werden uns in Kürze bei Ihnen melden.\n\nMit freundlichen Grüßen,\nIhr Team von Tasty Pixel`,
       };
+      const mailOptions2 = {
+        from: process.env.EMAIL,
+        to: "charbel.herrera.21@gmail.com",
+        subject: "Kontaktformular - Nachrichteneingang",
+        text: textMessage,
+      };
 
       await transporter.sendMail(mailOptions);
-
+      await transporter.sendMail(mailOptions2);
       res
         .status(201)
         .json({ message: "Nachricht erfolgreich gesendet", newContact });
