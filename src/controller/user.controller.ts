@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { createUser, loginModel, verifyEmailModel } from "../model/user.model";
 import UserModel from "../model/user.schema";
+import ContactModel from "../model/contact.schema";
 
 export const UserController = {
   //!Register
@@ -157,19 +158,20 @@ export const UserController = {
           .json({ error: "Ungültige E-Mail oder Passwort." });
       }
 
-      //compare password
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res
-          .status(401)
-          .json({ error: "Passwort stimmt nicht überein!" });
-      }
       // user verified
       if (!user.isVerified) {
         return res.status(401).json({
           error:
             "Bitte verifiziere deine E-Mail-Adresse, bevor du dich einloggst.",
         });
+      }
+
+      //compare password
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ error: "Passwort stimmt nicht überein!" });
       }
 
       // Create JWT token
@@ -200,6 +202,8 @@ export const UserController = {
       const verificationCode = Math.floor(100000 + Math.random() * 900000); //  6-digit verification code
       user.verificationCodeForgotPassword = verificationCode.toString();
       await user.save();
+
+      console.log("veri", verificationCode);
 
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -234,10 +238,10 @@ export const UserController = {
   async verifyVerificationCode(req: Request, res: Response) {
     try {
       const { verificationCodeForgotPassword } = req.body;
-      const { email } = req.params;
+      const { id } = req.params;
 
       const user = await UserModel.findOne({
-        email,
+        _id: id,
         verificationCodeForgotPassword,
       });
 
@@ -260,7 +264,7 @@ export const UserController = {
       });
     } catch (error) {
       res.status(500).json({
-        message:
+        error:
           "Ein Fehler ist bei der Validierung des Bestätigungscodes aufgetreten.",
       });
     }
@@ -270,16 +274,16 @@ export const UserController = {
   async resetPassword(req: Request, res: Response) {
     try {
       const { password, confirmPassword } = req.body;
-      const { email } = req.params;
+      const { id } = req.params;
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ _id: id });
 
       if (!user) {
         return res.status(404).json({
-          message: "Benutzer nicht gefunden oder ungültiger Bestätigungscode.",
+          error: "Benutzer nicht gefunden",
         });
       }
 
@@ -294,6 +298,52 @@ export const UserController = {
       res.status(500).json({
         message:
           "Ein Fehler ist aufgetreten, während das Passwort zurückgesetzt wurde.",
+      });
+    }
+  },
+
+  async createContact(req: Request, res: Response) {
+    try {
+      const { username, email, subject, textMessage } = req.body;
+
+      if (!username || !email || !subject || !textMessage) {
+        return res.status(400).json({
+          error: "Bitte füllen Sie alle erforderlichen Felder aus.",
+        });
+      }
+      const newContact = await new ContactModel({
+        username,
+        email,
+        subject,
+        textMessage,
+      });
+      await newContact.save();
+
+      // Send an email using nodemailer
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASS,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Kontaktformular - Nachrichteneingang",
+        text: `Hallo ${username},\n\nVielen Dank für Ihre Nachricht. Wir haben Ihre Anfrage erhalten:\n\nIhre Nachricht lautet:\n${textMessage}\n\nWir werden uns in Kürze bei Ihnen melden.\n\nMit freundlichen Grüßen,\nIhr Team von Tasty Pixel`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      res
+        .status(201)
+        .json({ message: "Nachricht erfolgreich gesendet", newContact });
+    } catch (error) {
+      console.error("eeeee", error);
+      res.status(500).json({
+        error: "Beim Senden der Nachricht ist ein Fehler aufgetreten",
       });
     }
   },
