@@ -35,6 +35,6 @@ router.put(
   validationError(userValidationsRules.resetPassword),
   UserController.resetPassword
 );
-//! Contact
+// Contact
 router.post("/contact", UserController.createContact);
 export default router;

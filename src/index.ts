@@ -8,7 +8,6 @@ import userRouter from "./router/user";
 import recipeRouter from "./router/recipe";
 import commentRouter from "./router/comment";
 import emailRouter from "./router/user";
-import cors from "cors";
 import { errorHandler } from "./middelware/errorHandler";
 
 /** */
