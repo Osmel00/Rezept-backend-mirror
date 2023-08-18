@@ -5,31 +5,31 @@ import { UserController } from "../controller/user.controller";
 import { userValidationsRules } from "../lib/user.rules";
 import { validationError } from "../middelware/validation";
 
-//!register
+//register
 router.post(
   "/registrieren",
   validationError(userValidationsRules.signup),
   UserController.register
 );
-//! email validation
+// email validation
 router.get("/verifizieren/:token", UserController.verifyEmail);
 
-//!login
+//login
 router.post(
   "/anmelden",
   validationError(userValidationsRules.signin),
   UserController.login
 );
-//!forgot password
+//forgot password
 router.post("/passwort-vergessen", UserController.forgotPassword);
 
-//! verification code
+// verification code
 router.post(
   "/verifiziere-verifikationscode/:email",
   UserController.verifyVerificationCode
 );
 
-//! reset password
+// reset password
 router.put(
   "/passwort-zuruecksetzen/:email",
   validationError(userValidationsRules.resetPassword),

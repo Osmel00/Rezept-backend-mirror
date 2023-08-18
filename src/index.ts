@@ -7,13 +7,15 @@ import userRouter from "./router/user";
 import recipeRouter from "./router/recipe";
 import commentRouter from "./router/comment";
 import emailRouter from "./router/user";
-
+import cors from "cors";
 import { errorHandler } from "./middelware/errorHandler";
 
 /** */
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors());
 
 const connectDb = async (): Promise<void> => {
   try {
