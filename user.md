@@ -44,7 +44,6 @@ Response: {
   wishlist["empty"];
   token,
   }
-}
 ```
 
 ## Login
@@ -98,7 +97,7 @@ Response: {
 ## Write your Verification Code to change Passowrd
 
 ```js
-EndPoint: `/user/verifiziere-verifikationscode/:email`;
+EndPoint: `/user/verifiziere-verifikationscode/:id`;
 Method: POST;
 body:{
 verificationCodeForgotPassword:string,
@@ -122,7 +121,7 @@ Response: {
 ## Reset Password
 
 ```js
-EndPoint: `/user/passwort-zuruecksetzen/:email"`;
+EndPoint: `/user/passwort-zuruecksetzen/:id`;
 Method: PUT;
 body:{
   password:string,
@@ -141,5 +140,26 @@ Response: {
     verificationCodeForgotPassword:string,
   }
     token:string
+}
+```
+
+## Contact
+
+```js
+EndPoint: `/user/contact`;
+Method: POST;
+body:{
+  email:string,
+  username:string,
+  subject:string,
+  textMessage:string,
+}
+Response: {
+  newContact:{
+    username:string,
+    email:string,
+    subject:string,
+    textMessage:string,
+  }
 }
 ```

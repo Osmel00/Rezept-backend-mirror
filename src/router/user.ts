@@ -25,14 +25,16 @@ router.post("/passwort-vergessen", UserController.forgotPassword);
 
 // verification code
 router.post(
-  "/verifiziere-verifikationscode/:email",
+  "/verifiziere-verifikationscode/:id",
   UserController.verifyVerificationCode
 );
 
 // reset password
 router.put(
-  "/passwort-zuruecksetzen/:email",
+  "/passwort-zuruecksetzen/:id",
   validationError(userValidationsRules.resetPassword),
   UserController.resetPassword
 );
+//! Contact
+router.post("/contact", UserController.createContact);
 export default router;
