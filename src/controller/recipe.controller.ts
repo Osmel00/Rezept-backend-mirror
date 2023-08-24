@@ -20,9 +20,11 @@ export const getSingleRecipe = (req: Request, res: Response) => {
 
 export const getRecipes = (req: Request, res: Response) => {
   const { number } = req.params;
-  const { sort = "createdAt", category = [""], count = 12 } = req.body;
+  const { sort = "createdAt", category = [""] } = req.query;
 
-  callRecipes(parseInt(number), count, sort, category)
+  const count = 12;
+
+  callRecipes(parseInt(number), count, sort as string, category as string[])
     .then((resolve) => res.status(200).send(resolve))
     .catch((err) => {
       res.status(500).send("error while get recipes from db");
