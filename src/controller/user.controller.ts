@@ -351,4 +351,34 @@ export const UserController = {
       });
     }
   },
+
+  async checkGoogle(req: Request, res: Response, next: NextFunction) {
+    try {
+      const saltRounds = 10;
+      const { username, email, picture } = req.body;
+
+      const randomPassword = Math.random().toString(36).substring(7);
+      const hashedPassword = await bcrypt.hash(randomPassword, saltRounds);
+
+      let user = await UserModel.findOne({ email });
+
+      if (!user) {
+        user = new UserModel({
+          username,
+          email,
+          password: hashedPassword,
+          picture,
+          isVerified: true,
+        });
+
+        await user.save();
+      }
+
+      res
+        .status(201)
+        .json({ message: "Anmeldung mit Google erfolgreich", user });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
