@@ -12,7 +12,7 @@ body:{
 }
 Response: {
   newUser:{
-
+    _id:string,
     username:string,
     email:string,
     password:string,
@@ -34,6 +34,7 @@ EndPoint: `/user/verifizieren/:token`;
 Method: GET;
 body: -,
 Response: {
+  _id:string,
   username,
   email,
   password,
@@ -57,6 +58,7 @@ body:{
 }
 Response: {
   user:{
+    _id:string,
     username:string,
     email:string,
     password:string,
@@ -80,6 +82,7 @@ email:string,
 }
 Response: {
   user:{
+    _id:string,
     username:string,
     email:string,
     password:string,
@@ -104,6 +107,7 @@ verificationCodeForgotPassword:string,
 }
 Response: {
   user:{
+    _id:string,
     username:string,
     email:string,
     password:string,
@@ -129,6 +133,7 @@ body:{
 }
 Response: {
   user:{
+    _id:string,
     username:string,
     email:string,
     password:string,
@@ -156,10 +161,33 @@ body:{
 }
 Response: {
   newContact:{
+    _id:string,
     username:string,
     email:string,
     subject:string,
     textMessage:string,
+  }
+}
+```
+
+## google Checking
+
+```js
+EndPoint: `/user/checkgoogle`;
+Method: POST;
+body:{
+  auf googlebtn klicken
+}
+Response: {
+  user:{
+    _id:string,
+    username:string,
+    email:string,
+    password:string,
+    isVerified:boolean,
+    info["empty"]?:string[],
+    image["empty"]?:string[],
+    wishlist["empty"]?:string[];
   }
 }
 ```

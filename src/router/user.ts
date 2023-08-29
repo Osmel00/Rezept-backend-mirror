@@ -38,3 +38,6 @@ router.put(
 // Contact
 router.post("/contact", UserController.createContact);
 export default router;
+
+// checkgoogle
+router.post("/checkgoogle", UserController.checkGoogle);
