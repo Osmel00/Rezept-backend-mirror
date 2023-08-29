@@ -39,3 +39,14 @@ export async function loginModel(
   const user = await UserModel.findOne({ email });
   return user || null;
 }
+
+//! getUserbyId
+export const getSingleUser = async (id: string) => {
+  try {
+    const user = await UserModel.findById(id);
+
+    return user;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
