@@ -191,3 +191,47 @@ Response: {
   }
 }
 ```
+
+## Contact
+
+```js
+EndPoint: `/user/contact`;
+Method: POST;
+body:{
+  email:string,
+  username:string,
+  subject:string,
+  textMessage:string,
+}
+Response: {
+  newContact:{
+    _id:string,
+    username:string,
+    email:string,
+    subject:string,
+    textMessage:string,
+  }
+}
+```
+
+## Get User By Id
+
+```js
+EndPoint: `/user/:id`;
+Method: GET;
+body:{
+  -
+}
+Response: {
+  user:{
+    _id:string,
+    username:string,
+    email:string,
+    password:string,
+    isVerified:boolean,
+    info["empty"]?:string[],
+    image["empty"]?:string[],
+    wishlist["empty"]?:string[];
+  }
+}
+```

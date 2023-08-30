@@ -2,9 +2,15 @@ import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import { createUser, loginModel, verifyEmailModel } from "../model/user.model";
+import {
+  createUser,
+  getSingleUser,
+  loginModel,
+  verifyEmailModel,
+} from "../model/user.model";
 import UserModel from "../model/user.schema";
 import ContactModel from "../model/contact.schema";
+import mongoose from "mongoose";
 
 export const UserController = {
   //!Register
@@ -351,7 +357,7 @@ export const UserController = {
       });
     }
   },
-
+  //!  checkgoogle
   async checkGoogle(req: Request, res: Response, next: NextFunction) {
     try {
       const saltRounds = 10;
@@ -377,6 +383,20 @@ export const UserController = {
       res
         .status(201)
         .json({ message: "Anmeldung mit Google erfolgreich", user });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  //! getUserById
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Ungültige Benutzer-ID." });
+    }
+    try {
+      const user = await getSingleUser(id);
+      return res.status(200).json(user);
     } catch (error) {
       next(error);
     }

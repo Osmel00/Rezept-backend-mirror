@@ -41,3 +41,6 @@ export default router;
 
 // checkgoogle
 router.post("/checkgoogle", UserController.checkGoogle);
+
+// get  User by Id
+router.get("/:id", UserController.getUserById);
