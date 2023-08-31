@@ -373,7 +373,7 @@ export const UserController = {
           username,
           email,
           password: hashedPassword,
-          picture,
+          image: [picture],
           isVerified: true,
         });
 
