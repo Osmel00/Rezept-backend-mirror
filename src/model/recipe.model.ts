@@ -92,3 +92,13 @@ export const updateRecipe = async (
     throw new Error();
   }
 };
+
+export const callWishList = async (list: string[]) => {
+  try {
+    const wishList = await Recipe.find().where("_id").in(list);
+
+    return wishList;
+  } catch {
+    throw new Error();
+  }
+};
