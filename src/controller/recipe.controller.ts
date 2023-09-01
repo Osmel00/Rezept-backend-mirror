@@ -23,7 +23,7 @@ export const getRecipes = (req: Request, res: Response) => {
   const { number } = req.params;
   const { sort = "createdAt", category = [""] } = req.query;
 
-  const count = 12;
+  const count = 4;
 
   callRecipes(parseInt(number), count, sort as string, category as string[])
     .then((resolve) => res.status(200).send(resolve))
