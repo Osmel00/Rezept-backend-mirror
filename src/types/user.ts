@@ -28,3 +28,10 @@ export type ValidationErrorHandler = (
 export interface HandlerError extends Error {
   statusCode?: number;
 }
+
+export interface ContactType extends Document {
+  username: string;
+  email: string;
+  subject: string;
+  textMessage: string;
+}

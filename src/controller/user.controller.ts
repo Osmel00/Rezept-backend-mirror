@@ -2,8 +2,15 @@ import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import { createUser, loginModel, verifyEmailModel } from "../model/user.model";
+import {
+  createUser,
+  getSingleUser,
+  loginModel,
+  verifyEmailModel,
+} from "../model/user.model";
 import UserModel from "../model/user.schema";
+import ContactModel from "../model/contact.schema";
+import mongoose from "mongoose";
 
 export const UserController = {
   //!Register
@@ -11,7 +18,6 @@ export const UserController = {
     try {
       const { username, email, dateOfBirth, password, confirmPassword } =
         req.body;
-
       // Hash Password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,6 +29,7 @@ export const UserController = {
         hashedPassword,
         dateOfBirth
       );
+
       // Create verification token
       const token = jwt.sign(
         { email: newUser.email },
@@ -45,7 +52,7 @@ export const UserController = {
       <p>Liebe*r ${newUser.username},</p>
       <p>Vielen Dank für die Registrierung bei Tasty Pixel! Wir freuen uns, dich an Bord zu haben.</p>
       <p>Dein Konto ist fast fertig. Bevor du loslegst, verifiziere bitte deine E-Mail-Adresse, indem du auf den folgenden Link klickst:</p>
-      <p><a href="http://localhost:3000/user/verify/${token}">E-Mail verifizieren</a></p>
+      <p><a href="http://localhost:3000/user/verifizieren/${token}">E-Mail verifizieren</a></p>
       <p>Die Verifizierung deiner E-Mail sichert dein Konto und schaltet alle Funktionen und Inhalte frei, die auf dich warten.</p>
       <p>Bei Fragen oder Unterstützungsbedarf kannst du dich gerne an unser Support-Team unter ${process.env.EMAIL} wenden. Wir sind hier, um dir eine reibungslose Erfahrung zu bieten.</p>
       <p>Nochmals herzlich willkommen bei der Tasty Pixel! Wir sind gespannt darauf, wie du deine Zeit bei uns nutzen wirst.</p>
@@ -157,19 +164,20 @@ export const UserController = {
           .json({ error: "Ungültige E-Mail oder Passwort." });
       }
 
-      //compare password
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res
-          .status(401)
-          .json({ error: "Passwort stimmt nicht überein!" });
-      }
       // user verified
       if (!user.isVerified) {
         return res.status(401).json({
           error:
             "Bitte verifiziere deine E-Mail-Adresse, bevor du dich einloggst.",
         });
+      }
+
+      //compare password
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ error: "Passwort stimmt nicht überein!" });
       }
 
       // Create JWT token
@@ -234,10 +242,10 @@ export const UserController = {
   async verifyVerificationCode(req: Request, res: Response) {
     try {
       const { verificationCodeForgotPassword } = req.body;
-      const { email } = req.params;
+      const { id } = req.params;
 
       const user = await UserModel.findOne({
-        email,
+        _id: id,
         verificationCodeForgotPassword,
       });
 
@@ -260,7 +268,7 @@ export const UserController = {
       });
     } catch (error) {
       res.status(500).json({
-        message:
+        error:
           "Ein Fehler ist bei der Validierung des Bestätigungscodes aufgetreten.",
       });
     }
@@ -270,16 +278,16 @@ export const UserController = {
   async resetPassword(req: Request, res: Response) {
     try {
       const { password, confirmPassword } = req.body;
-      const { email } = req.params;
+      const { id } = req.params;
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ _id: id });
 
       if (!user) {
         return res.status(404).json({
-          message: "Benutzer nicht gefunden oder ungültiger Bestätigungscode.",
+          error: "Benutzer nicht gefunden",
         });
       }
 
@@ -295,6 +303,102 @@ export const UserController = {
         message:
           "Ein Fehler ist aufgetreten, während das Passwort zurückgesetzt wurde.",
       });
+    }
+  },
+  //!createContact
+  async createContact(req: Request, res: Response) {
+    try {
+      const { username, email, subject, textMessage } = req.body;
+
+      if (!username || !email || !subject || !textMessage) {
+        return res.status(400).json({
+          error: "Bitte füllen Sie alle erforderlichen Felder aus.",
+        });
+      }
+      const newContact = await new ContactModel({
+        username,
+        email,
+        subject,
+        textMessage,
+      });
+      await newContact.save();
+
+      // Send an email using nodemailer
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASS,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Kontaktformular - Nachrichteneingang",
+        text: `Hallo ${username},\n\nVielen Dank für Ihre Nachricht. Wir haben Ihre Anfrage erhalten:\n\nIhre Nachricht lautet:\n${textMessage}\n\nWir werden uns in Kürze bei Ihnen melden.\n\nMit freundlichen Grüßen,\nIhr Team von Tasty Pixel`,
+      };
+      const mailOptions2 = {
+        from: process.env.EMAIL,
+        to: "charbel.herrera.21@gmail.com",
+        subject: "Kontaktformular - Nachrichteneingang",
+        text: textMessage,
+      };
+
+      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions2);
+      res
+        .status(201)
+        .json({ message: "Nachricht erfolgreich gesendet", newContact });
+    } catch (error) {
+      console.error("eeeee", error);
+      res.status(500).json({
+        error: "Beim Senden der Nachricht ist ein Fehler aufgetreten",
+      });
+    }
+  },
+  //!  checkgoogle
+  async checkGoogle(req: Request, res: Response, next: NextFunction) {
+    try {
+      const saltRounds = 10;
+      const { username, email, picture } = req.body;
+
+      const randomPassword = Math.random().toString(36).substring(7);
+      const hashedPassword = await bcrypt.hash(randomPassword, saltRounds);
+
+      let user = await UserModel.findOne({ email });
+
+      if (!user) {
+        user = new UserModel({
+          username,
+          email,
+          password: hashedPassword,
+          image: [picture],
+          isVerified: true,
+        });
+
+        await user.save();
+      }
+
+      res
+        .status(201)
+        .json({ message: "Anmeldung mit Google erfolgreich", user });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  //! getUserById
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Ungültige Benutzer-ID." });
+    }
+    try {
+      const user = await getSingleUser(id);
+      return res.status(200).json(user);
+    } catch (error) {
+      next(error);
     }
   },
 };

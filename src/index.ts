@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
 import dotenv from "dotenv";
-const cors = require("cors");
+import cors from "cors";
 
 
 /** routers */
@@ -9,19 +9,19 @@ import userRouter from "./router/user";
 import recipeRouter from "./router/recipe";
 import commentRouter from "./router/comment";
 import emailRouter from "./router/user";
-
 import { errorHandler } from "./middelware/errorHandler";
 
 /** */
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
+/* app.use(cors()); */
 
 const connectDb = async (): Promise<void> => {
   try {
     await mongoose.connect(
-      //"mongodb://127.0.0.1:27017/recipe-sharing",
-      "mongodb+srv://aliho3einde:qPRehosjqi7aUr63@cluster0.oiaok8u.mongodb.net/?retryWrites=true&w=majority",
+      "mongodb://127.0.0.1:27017/recipe-sharing",
+      //"mongodb+srv://aliho3einde:qPRehosjqi7aUr63@cluster0.oiaok8u.mongodb.net/?retryWrites=true&w=majority",
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -40,9 +40,18 @@ connectDb();
 app.get("/", (req: Request, res: Response) => {
   res.send("recipe sharing");
 });
-app.use(cors());
-app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: "GET,POST,DELETE,PUT",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);
 app.use("/comment", commentRouter);
