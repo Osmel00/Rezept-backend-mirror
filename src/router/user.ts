@@ -37,10 +37,14 @@ router.put(
 );
 // Contact
 router.post("/contact", UserController.createContact);
-export default router;
 
 // checkgoogle
 router.post("/checkgoogle", UserController.checkGoogle);
 
 // get  User by Id
 router.get("/:id", UserController.getUserById);
+
+// wishlist
+router.put("/wishlist", UserController.wishListController);
+
+export default router;
