@@ -4,7 +4,7 @@ import { createNewRecipe, getRecipe, callRecipes } from "../model/recipe.model";
 export const getSingleRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  console.log(id);
+  
 
   getRecipe(id)
     .then((resolve) => res.status(200).send(resolve))
@@ -26,6 +26,7 @@ export const getRecipes = (req: Request, res: Response) => {
 
 export const createRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
+ 
   const data = req.body;
   data.userID = id;
 
