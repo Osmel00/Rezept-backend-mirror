@@ -7,6 +7,7 @@ import {
   getRecipes,
   getUserRecipes,
   deleteSingleRecipe,
+  getWishList,
   updateSingleRecipe,
 } from "./../controller/recipe.controller";
 
@@ -19,6 +20,8 @@ router
 router.get("/page/:number", getRecipes);
 
 router.get("/user/:id", getUserRecipes);
+
+router.get("/wishlist", getWishList);
 
 router.post("/create/:id", createRecipe);
 

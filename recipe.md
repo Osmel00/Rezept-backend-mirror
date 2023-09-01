@@ -53,7 +53,7 @@ Response: {
 ```js
 EndPoint: `/recipe/page/<page number>`;
 Method: GET;
-body: {
+query: {
   sort?: "createdAt" (Default) | "view" | "time";
   category?;
   count? (default 12) // page size
@@ -66,7 +66,7 @@ Response: [{}, {}];
 ```js
 EndPoint: `/recipe/user/<user id>`;
 Method: GET;
-body: {
+query: {
   sort?: "createdAt" (Default) | "view" | "time";
   category?;
   count? (default 12) // page size
@@ -95,4 +95,15 @@ body: {
   data; // an Object of all required item in recipe
 }
 Response: [statusCode 200];
+```
+
+## get users Wishlist Recipes
+
+```js
+EndPoint: `/wishlist`;
+Method: GET;
+query: {
+  list: string[]  // user wishlist field
+}
+Response: [{}, {}];
 ```
