@@ -12,6 +12,7 @@ export interface User {
   image?: string[];
   like?: number;
   wishlist?: string[];
+ 
 }
 
 export type MiddlewareFunction = (

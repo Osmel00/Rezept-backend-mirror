@@ -13,6 +13,7 @@ const userSchema: Schema = new Schema(
     image: [String],
     like: Number,
     wishlist: [String],
+   
   },
   {
     timestamps: true,

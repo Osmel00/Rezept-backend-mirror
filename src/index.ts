@@ -3,6 +3,7 @@ import mongoose, { ConnectOptions } from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
+
 /** routers */
 import userRouter from "./router/user";
 import recipeRouter from "./router/recipe";
@@ -39,7 +40,6 @@ connectDb();
 app.get("/", (req: Request, res: Response) => {
   res.send("recipe sharing");
 });
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -50,6 +50,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
 
 app.use("/user", userRouter);
 app.use("/recipe", recipeRouter);

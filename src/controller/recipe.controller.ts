@@ -11,7 +11,7 @@ import {
 
 export const getSingleRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
-
+  
   getRecipe(id)
     .then((resolve) => res.status(200).send(resolve))
     .catch((err) => {
@@ -45,6 +45,7 @@ export const getUserRecipes = (req: Request, res: Response) => {
 
 export const createRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
+ 
   const data = req.body;
   data.userID = id;
   data.category.unshift("");
