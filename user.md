@@ -242,7 +242,8 @@ Response: {
 EndPoint: `/user/wishlist`;
 Method: Put;
 body:{
-  -
+   userId:string,
+  recipeId:string
 }
 Response: {
   user:{
