@@ -235,3 +235,26 @@ Response: {
   }
 }
 ```
+
+## WishList
+
+```js
+EndPoint: `/user/wishlist`;
+Method: Put;
+body:{
+   userId:string,
+  recipeId:string
+}
+Response: {
+  user:{
+    _id:string,
+    username:string,
+    email:string,
+    password:string,
+    isVerified:boolean,
+    info["empty"]?:string[],
+    image["empty"]?:string[],
+    wishlist["recipeId","recipeId",....]?:string[];
+  }
+}
+```

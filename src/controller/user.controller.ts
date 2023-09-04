@@ -401,4 +401,21 @@ export const UserController = {
       next(error);
     }
   },
+
+  //! wishList
+  async wishListController(req: Request, res: Response, next: NextFunction) {
+    const { userId, recipeId } = req.body;
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "Benutzer nicht gefunden" });
+      }
+      user.wishlist?.push(recipeId);
+      const updateUser = await user.save();
+
+      return res.status(200).json(updateUser);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
