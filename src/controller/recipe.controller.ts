@@ -7,6 +7,7 @@ import {
   deleteRecipe,
   updateRecipe,
   callWishList,
+  getALlRecipeBYCategory, 
 } from "../model/recipe.model";
 
 export const getSingleRecipe = (req: Request, res: Response) => {
@@ -15,7 +16,7 @@ export const getSingleRecipe = (req: Request, res: Response) => {
   getRecipe(id)
     .then((resolve) => res.status(200).send(resolve))
     .catch((err) => {
-      res.send(500).send("error while get this recipe from db");
+      res.status(500).send("error while get this recipe from db");
     });
 };
 
@@ -87,4 +88,16 @@ export const getWishList = (req: Request, res: Response) => {
     .catch((err) => {
       res.status(500).send("error while get wishList from db");
     });
+};
+
+
+export const getRecipeByCategory = (req: Request, res: Response) => {
+  const { category } = req.params;
+    
+   getALlRecipeBYCategory(category)
+     .then((resolve) => res.status(200).send(resolve))
+     .catch((err) => {
+   
+        res.status(500).send("error while get this recipe from db");
+     });
 };

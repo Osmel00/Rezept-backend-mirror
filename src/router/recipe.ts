@@ -9,6 +9,7 @@ import {
   deleteSingleRecipe,
   getWishList,
   updateSingleRecipe,
+  getRecipeByCategory,
 } from "./../controller/recipe.controller";
 
 router
@@ -22,6 +23,7 @@ router.get("/page/:number", getRecipes);
 router.get("/user/:id", getUserRecipes);
 
 router.get("/wishlist", getWishList);
+router.get("/category/:category", getRecipeByCategory);
 
 router.post("/create/:id", createRecipe);
 

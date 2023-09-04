@@ -4,7 +4,7 @@ import Recipe from "./recipe.schema";
 export const getRecipe = async (id: string) => {
   try {
     const data = await Recipe.findById(id);
-    console.log(data);
+   
 
     return data;
   } catch {
@@ -99,6 +99,19 @@ export const callWishList = async (list: string[]) => {
 
     return wishList;
   } catch {
+    throw new Error();
+  }
+};
+
+export const getALlRecipeBYCategory = async (category: string) => {
+  try {
+   
+    const data = await Recipe.find({category: category});
+    
+
+    return data;
+  } catch {
+     
     throw new Error();
   }
 };

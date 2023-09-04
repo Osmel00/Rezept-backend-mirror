@@ -13,7 +13,7 @@ export const getAllComments = async (req: Request, res: Response)  => {
 
   export const createComment = (req: Request, res: Response) => {
     const data = req.body;
-   console.log(data)  ;
+  
   
     createNewComment(data)
       .then((comment) => res.status(201).send(comment))
