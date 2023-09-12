@@ -16,6 +16,7 @@ const recipeSchema: Schema = new Schema(
     category: { type: Array },
     view: { type: Number, default: 0 },
     time: { type: Number, default: 1, required: true },
+    rating: { type: Number, default: 0 },
   },
   {
     timestamps: true,

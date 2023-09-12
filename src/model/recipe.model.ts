@@ -1,10 +1,28 @@
 import { recipeType } from "../types/recipe";
 import Recipe from "./recipe.schema";
 
+export const updateRecipeRewiews = async (
+  id: string,
+  rating: number,
+  rewiews: number
+) => {
+  try {
+    const data = await Recipe.findByIdAndUpdate(
+      id,
+      { rating: rating , view: rewiews},
+      
+    );
+    console.log(rating, rewiews);
+    console.log(data);
+    return data;
+  } catch {
+    throw new Error();
+  }
+};
+
 export const getRecipe = async (id: string) => {
   try {
     const data = await Recipe.findById(id);
-    console.log(data);
 
     return data;
   } catch {
@@ -98,6 +116,16 @@ export const callWishList = async (list: string[]) => {
     const wishList = await Recipe.find().where("_id").in(list);
 
     return wishList;
+  } catch {
+    throw new Error();
+  }
+};
+
+export const getALlRecipeBYCategory = async (category: string) => {
+  try {
+    const data = await Recipe.find({ category: category });
+
+    return data;
   } catch {
     throw new Error();
   }

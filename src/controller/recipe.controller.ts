@@ -7,7 +7,19 @@ import {
   deleteRecipe,
   updateRecipe,
   callWishList,
+  getALlRecipeBYCategory, updateRecipeRewiews,
 } from "../model/recipe.model";
+
+export const setRecipeRewiews = (req: Request, res: Response) => {
+  const { id, } = req.params;
+  const { rating,rewiews } = req.body;
+ 
+  updateRecipeRewiews(id as string, parseInt(rating) , parseInt(rewiews))
+    .then((resolve) => res.status(200).send(resolve))
+    .catch((err) => {
+      res.status(500).send("error while get this recipe from db");
+    });
+};
 
 export const getSingleRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
@@ -15,7 +27,7 @@ export const getSingleRecipe = (req: Request, res: Response) => {
   getRecipe(id)
     .then((resolve) => res.status(200).send(resolve))
     .catch((err) => {
-      res.send(500).send("error while get this recipe from db");
+      res.status(500).send("error while get this recipe from db");
     });
 };
 
@@ -26,7 +38,8 @@ export const getRecipes = (req: Request, res: Response) => {
   const count = 4;
 
   callRecipes(parseInt(number), count, sort as string, category as string[])
-    .then((resolve) => res.status(200).send(resolve))
+    .then((resolve) =>
+      res.status(200).send(resolve))
     .catch((err) => {
       res.status(500).send("error while get recipes from db");
     });
@@ -87,4 +100,16 @@ export const getWishList = (req: Request, res: Response) => {
     .catch((err) => {
       res.status(500).send("error while get wishList from db");
     });
+};
+
+
+export const getRecipeByCategory = (req: Request, res: Response) => {
+  const { category } = req.params;
+    
+   getALlRecipeBYCategory(category)
+     .then((resolve) => res.status(200).send(resolve))
+     .catch((err) => {
+   
+        res.status(500).send("error while get this recipe from db");
+     });
 };
