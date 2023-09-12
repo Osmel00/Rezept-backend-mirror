@@ -10,6 +10,7 @@ import {
   getWishList,
   updateSingleRecipe,
   getRecipeByCategory,
+  setRecipeRewiews,
 } from "./../controller/recipe.controller";
 
 router
@@ -26,5 +27,6 @@ router.get("/wishlist", getWishList);
 router.get("/category/:category", getRecipeByCategory);
 
 router.post("/create/:id", createRecipe);
+router.put("/rewiews/:id", setRecipeRewiews);
 
 export default router;

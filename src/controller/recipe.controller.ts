@@ -7,8 +7,19 @@ import {
   deleteRecipe,
   updateRecipe,
   callWishList,
-  getALlRecipeBYCategory, 
+  getALlRecipeBYCategory, updateRecipeRewiews,
 } from "../model/recipe.model";
+
+export const setRecipeRewiews = (req: Request, res: Response) => {
+  const { id, } = req.params;
+  const { rating,rewiews } = req.body;
+ 
+  updateRecipeRewiews(id as string, parseInt(rating) , parseInt(rewiews))
+    .then((resolve) => res.status(200).send(resolve))
+    .catch((err) => {
+      res.status(500).send("error while get this recipe from db");
+    });
+};
 
 export const getSingleRecipe = (req: Request, res: Response) => {
   const { id } = req.params;
