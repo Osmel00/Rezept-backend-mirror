@@ -27,7 +27,8 @@ export const getRecipes = (req: Request, res: Response) => {
   const count = 4;
 
   callRecipes(parseInt(number), count, sort as string, category as string[])
-    .then((resolve) => res.status(200).send(resolve))
+    .then((resolve) =>
+      res.status(200).send(resolve))
     .catch((err) => {
       res.status(500).send("error while get recipes from db");
     });
