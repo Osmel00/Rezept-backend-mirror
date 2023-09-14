@@ -11,6 +11,7 @@ import {
   updateSingleRecipe,
   getRecipeByCategory,
   setRecipeRewiews,
+  getUserIdRating,
 } from "./../controller/recipe.controller";
 
 router
@@ -25,7 +26,7 @@ router.get("/user/:id", getUserRecipes);
 
 router.get("/wishlist", getWishList);
 router.get("/category/:category", getRecipeByCategory);
-
+router.get("/user/:userId/userating/:id", getUserIdRating);
 router.post("/create/:id", createRecipe);
 router.put("/rewiews/:id", setRecipeRewiews);
 

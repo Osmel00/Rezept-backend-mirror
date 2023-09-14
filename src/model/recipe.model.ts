@@ -1,19 +1,29 @@
 import { recipeType } from "../types/recipe";
 import Recipe from "./recipe.schema";
 
+export const isUserIdRating = async (id: string, userId: string) => {
+  try {
+    const data = await Recipe.find({ _id: id, like: userId });
+
+    return data;
+  } catch {
+    throw new Error();
+  }
+};
+
 export const updateRecipeRewiews = async (
   id: string,
+  userId: string,
   rating: number,
   rewiews: number
 ) => {
   try {
-    const data = await Recipe.findByIdAndUpdate(
-      id,
-      { rating: rating , view: rewiews},
-      
-    );
-    console.log(rating, rewiews);
-    console.log(data);
+    const data = await Recipe.findByIdAndUpdate(id, {
+      $push: { like: userId },
+      rating: rating,
+      view: rewiews,
+    });
+
     return data;
   } catch {
     throw new Error();
