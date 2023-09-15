@@ -21,6 +21,7 @@ const connectDb = async (): Promise<void> => {
     await mongoose.connect(
       // "mongodb://127.0.0.1:27017/recipe-sharing",
       "mongodb+srv://aliho3einde:qPRehosjqi7aUr63@cluster0.oiaok8u.mongodb.net/?retryWrites=true&w=majority",
+     
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
