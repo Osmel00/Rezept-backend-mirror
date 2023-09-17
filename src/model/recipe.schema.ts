@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { recipeType } from "./../types/recipe";
-
+import paginate  from 'mongoose-paginate-v2';
 const recipeSchema: Schema = new Schema(
   {
     userID: {
@@ -23,9 +23,11 @@ const recipeSchema: Schema = new Schema(
   }
 );
 
-const RecipeModel = mongoose.model<recipeType & Document>(
+recipeSchema.plugin(paginate);
+const RecipeModel = mongoose.model<recipeType & Document,mongoose.PaginateModel<recipeType> >(
   "Recipe",
-  recipeSchema
+  recipeSchema,
+ 
 );
 
 export default RecipeModel;

@@ -1,6 +1,30 @@
 import { recipeType } from "../types/recipe";
 import Recipe from "./recipe.schema";
 
+export const recipePagination = async (
+  pageNr: number,
+  category: string[],
+  sorting: string
+) => {
+  try {
+    console.log(pageNr, category, sorting);
+    const options = {
+      page: pageNr,
+      limit: 6,
+      sort: { [sorting]: -1 },
+    };
+    console.log(options);
+    let arrayCategory = { category: { $in: category } };
+    const query = category ? arrayCategory : {};
+
+    const data = await Recipe.paginate(query, options);
+
+    return data;
+  } catch {
+    throw new Error();
+  }
+};
+
 export const isUserIdRating = async (id: string, userId: string) => {
   try {
     const data = await Recipe.find({ _id: id, like: userId });

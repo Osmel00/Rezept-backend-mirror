@@ -10,7 +10,18 @@ import {
   getALlRecipeBYCategory,
   updateRecipeRewiews,
   isUserIdRating,
+  recipePagination,
 } from "../model/recipe.model";
+
+export const getRecipePagination = (req: Request, res: Response) => {
+ const {pageNr,category,sort}  = req.query;
+ 
+  recipePagination(parseInt(pageNr as string),category as string[],sort as string)
+    .then((resolve) => res.status(200).send(resolve))
+    .catch((err) => {
+      res.status(500).send("error while get this recipe from db");
+    });
+};
 
 export const getUserIdRating = (req: Request, res: Response) => {
   const { id, userId } = req.params;
