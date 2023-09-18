@@ -20,8 +20,7 @@ const connectDb = async (): Promise<void> => {
   try {
     await mongoose.connect(
       // "mongodb://127.0.0.1:27017/recipe-sharing",
-      (process.env.MONGODB_SERVER_URL as string),
-     
+      process.env.MONGODB_SERVER_URL as string,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -44,7 +43,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "https://recipe-webb-app.vercel.app",
+    "https://recipe-web-app-e98i.onrender.com",
+  ],
   methods: "GET,POST,DELETE,PUT",
   credentials: true,
 };
