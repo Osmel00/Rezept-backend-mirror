@@ -42,7 +42,10 @@ router.post("/contact", UserController.createContact);
 router.post("/checkgoogle", UserController.checkGoogle);
 
 // get  User by Id
-router.get("/:id", UserController.getUserById);
+router
+  .route("/:id")
+  .get(UserController.getUserById)
+  .put(UserController.updateUserDescription);
 
 // wishlist
 router.put("/wishlist", UserController.wishListController);

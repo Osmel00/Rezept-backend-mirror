@@ -402,6 +402,26 @@ export const UserController = {
     }
   },
 
+  // Update User Description
+  async updateUserDescription(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const updatedDescription = req.body.info;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Ungültige Benutzer-ID." });
+    }
+    try {
+      const user = await getSingleUser(id);
+      if (!user) {
+        return res.status(404).json({ error: "Benutzer nicht gefunden" });
+      }
+      user.info = [updatedDescription];
+      const updatedUser = await user.save();
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   //! wishList
   async wishListController(req: Request, res: Response, next: NextFunction) {
     const { userId, recipeId } = req.body;
