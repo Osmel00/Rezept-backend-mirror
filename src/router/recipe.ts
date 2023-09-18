@@ -11,8 +11,10 @@ import {
   updateSingleRecipe,
   getRecipeByCategory,
   setRecipeRewiews,
-  getUserIdRating,
+  getUserIdRating,getRecipePagination,
 } from "./../controller/recipe.controller";
+
+
 
 router
   .route("/:id")
@@ -20,8 +22,9 @@ router
   .delete(deleteSingleRecipe)
   .put(updateSingleRecipe);
 
-router.get("/page/:number", getRecipes);
 
+router.get("/page/:number", getRecipes);
+router.get("/pages/pagination", getRecipePagination);
 router.get("/user/:id", getUserRecipes);
 
 router.get("/wishlist", getWishList);
