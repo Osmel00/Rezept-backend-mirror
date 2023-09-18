@@ -13,12 +13,17 @@ const userSchema: Schema = new Schema(
     image: [String],
     like: Number,
     wishlist: [String],
-   
   },
   {
     timestamps: true,
   }
 );
+
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
 
 const UserModel = mongoose.model<User & Document>("User", userSchema);
 
