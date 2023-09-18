@@ -20,7 +20,7 @@ const connectDb = async (): Promise<void> => {
   try {
     await mongoose.connect(
       // "mongodb://127.0.0.1:27017/recipe-sharing",
-      "mongodb+srv://aliho3einde:qPRehosjqi7aUr63@cluster0.oiaok8u.mongodb.net/?retryWrites=true&w=majority",
+      (process.env.MONGODB_SERVER_URL as string),
      
       {
         useNewUrlParser: true,
@@ -44,7 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173"],
   methods: "GET,POST,DELETE,PUT",
   credentials: true,
 };
